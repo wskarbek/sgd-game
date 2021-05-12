@@ -1,0 +1,2 @@
+all:
+	g++ test.cpp -I"C:\Program Files\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\SDL2\include" -L"C:\Program Files\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\SDL2\lib" -w -Wl,-subsystem,windows -lmingw32 -lSDL2main -lSDL2 -o build/test
