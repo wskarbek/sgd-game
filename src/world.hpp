@@ -1,10 +1,22 @@
 #include <SDL2/SDL.h>
+#include <stdio.h>
 #include <vector>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <sstream>
 
 #include "spritesheet.hpp"
 
 enum Block {
-    STONE, DIRT, ROCK, LAVA, START, FINISH, DIAMOND
+    AIR = 0,
+    WALL = 1,
+    DIRT = 2,
+    ROCK = 3,
+    LAVA = 4,
+    START = 5,
+    FINISH = 6,
+    DIAMOND = 7
 };
 
 class World {
@@ -16,11 +28,13 @@ class World {
         SDL_Texture * blockTextureStone;
         Spritesheet spritesheet;
         std::vector<std::vector<Block>> map;
+        std::ifstream inFile;
     public:
         World();
-        World(SDL_Renderer * renderer, int x, int y);
-        void load_block_textures();
+        World(SDL_Renderer * r);
         void render_world();
+        void level_load(const char *path);
+        void level_unload();
+        void load_block_textures();
         void move_camera_to_player();
-        void test_generate();
 };

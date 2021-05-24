@@ -7,9 +7,9 @@ Game::Game(SDL_Renderer * r) {
 Game::~Game() {}
 
 void Game::init() {
-    world = World(renderer, 10, 10);
+    world = World(renderer);
     world.load_block_textures();
-    world.test_generate();
+    world.level_load("../resources/levels/1.lvl");
 }
 
 void Game::update() {

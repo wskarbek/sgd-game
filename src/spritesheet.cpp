@@ -1,11 +1,13 @@
 #include "spritesheet.hpp"
 
+#include <stdio.h>
+
 Spritesheet::Spritesheet() {}
 
 Spritesheet::Spritesheet(SDL_Renderer * r, const char *path, int row, int column) {
     spritesheetRenderer = r;
     spritesheetSurface = IMG_Load(path);
-    spritesheetTexture = SDL_CreateTextureFromSurface(r, spritesheetSurface);
+    spritesheetTexture = SDL_CreateTextureFromSurface(spritesheetRenderer, spritesheetSurface);
 
     spriteClip.w = spritesheetSurface->w / column;
     spriteClip.h = spritesheetSurface->h / row;
