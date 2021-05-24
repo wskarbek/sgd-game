@@ -8,10 +8,10 @@ World::World() {
     
 }
 
-World::World(SDL_Renderer * r) {
-    renderer = r;
-    renderX = 0;
-    renderY = 0;
+World::World(SDL_Renderer * renderer) {
+    this->renderer = renderer;
+    this->renderX = 0;
+    this->renderY = 0;
 }
 
 void World::render_world() {

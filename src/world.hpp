@@ -31,7 +31,7 @@ class World {
         std::ifstream inFile;
     public:
         World();
-        World(SDL_Renderer * r);
+        World(SDL_Renderer * renderer);
         void render_world();
         void level_load(const char *path);
         void level_unload();
