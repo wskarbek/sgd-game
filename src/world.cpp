@@ -22,6 +22,10 @@ void World::render_world() {
             SDL_Rect blockRect = {mapX * BLOCKSIZE + renderX, mapY * BLOCKSIZE + renderY, BLOCKSIZE, BLOCKSIZE };
             Block blockId = map.at(mapY).at(mapX);
             switch(blockId) {
+                case AIR:
+                    spritesheet.select_sprite(7, 1);
+                    spritesheet.draw_selected_sprite(&blockRect);
+                    break;
                 case WALL:
                     spritesheet.select_sprite(0, 3);
                     spritesheet.draw_selected_sprite(&blockRect);
@@ -90,9 +94,6 @@ void World::level_unload() {
 
 void World::load_block_textures() {
     spritesheet = Spritesheet(renderer, "../resources/sprites.png", 8, 10);
-    //blockSurfaceStone = SDL_LoadBMP( "obama.bmp" );
-    //blockTextureStone = SDL_CreateTextureFromSurface(renderer, blockSurfaceStone);
-    //SDL_FreeSurface(blockSurfaceStone);
 }
 
 void World::move_camera_to_player() {
