@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <iostream>
 
-#include <game.cpp>
+#include <game.hpp>
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -35,6 +35,7 @@ int main( int argc, char* args[] ) {
         }
         game.update();
         game.render();
+        printf("%s", SDL_GetError());
         SDL_RenderPresent(renderer);
     }
     SDL_DestroyRenderer(renderer);
