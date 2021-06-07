@@ -43,7 +43,7 @@ void World::render_world() {
                     spritesheet.draw_selected_sprite(&blockRect);
                     break;
                 case START:
-                    spritesheet.select_sprite(0, 0);
+                    spritesheet.select_sprite(7, 1);
                     spritesheet.draw_selected_sprite(&blockRect);
                     break;
                 case FINISH:
@@ -56,7 +56,6 @@ void World::render_world() {
                     break;
             }
         }
-        printf("\n");
     }
 }
 
@@ -96,6 +95,45 @@ void World::load_block_textures() {
     spritesheet = Spritesheet(renderer, "../resources/sprites.png", 8, 10);
 }
 
+SDL_Rect World::player_get_position() {
+    int sizeY = map.size();
+    int sizeX = map.at(0).size();
+    for(int mapY = 0; mapY < sizeY; mapY++) {
+        for(int mapX = 0; mapX < sizeX; mapX++) {
+            if(map.at(mapY).at(mapX) == START) {
+                std::cout << mapX << " " << mapY << std::endl;
+                return { mapX, mapY, 0, 0 };
+            }
+        }
+    }
+}
+
+void World::player_render(int x, int y) {
+    SDL_Rect blockRect = { x*BLOCKSIZE, y*BLOCKSIZE, BLOCKSIZE, BLOCKSIZE };
+    spritesheet.select_sprite(0, 0);
+    spritesheet.draw_selected_sprite(&blockRect);
+}
+
+bool World::player_check_next_block(int x, int y, Direction direction) {
+    if(direction == UP) {
+        if(map.at(y-1).at(x) != 0) return true; 
+    }
+    if(direction == LEFT) {
+        if(map.at(y).at(x-1) != 0) return true; 
+    }
+    if(direction == RIGHT) {
+        if(map.at(y).at(x+1) != 0) return true; 
+    }
+    if(direction == DOWN) {
+        if(map.at(y+1).at(x) != 0) return true; 
+    }
+    return false;
+};
+
 void World::move_camera_to_player() {
+
+}
+
+bool World::check_environment_hitbox() {
 
 }

@@ -3,7 +3,7 @@ LDIR = lib
 ODIR = bin
 SDIR = src
 
-LIBS=-lmingw32 -lSDL2main -lSDL2 -lSDL2_image
+LIBS=-lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 
 CC=g++
 CFLAGS=-I$(IDIR) -I$(SDIR) -L$(LDIR) -w -std=c++14

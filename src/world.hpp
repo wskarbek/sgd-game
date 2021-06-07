@@ -8,6 +8,10 @@
 
 #include "spritesheet.hpp"
 
+enum Direction {
+    UP, LEFT, RIGHT, DOWN
+};
+
 enum Block {
     AIR = 0,
     WALL = 1,
@@ -36,5 +40,9 @@ class World {
         void level_load(const char *path);
         void level_unload();
         void load_block_textures();
+        SDL_Rect player_get_position();
+        void player_render(int x, int y);
+        bool player_check_next_block(int x, int y, Direction direction);
         void move_camera_to_player();
+        bool check_environment_hitbox();
 };
