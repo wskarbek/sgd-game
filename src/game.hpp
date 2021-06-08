@@ -5,12 +5,14 @@
 struct Player {
     int hp;
     int x, y;
+    short moveFreeze;
     Player() {}
 };
 
 class Game{
     private:
         const Uint8 *state = SDL_GetKeyboardState(NULL);
+        const short MOVE_FREEZE = 10;
         SDL_Renderer * renderer;
         Player player;
         World world;

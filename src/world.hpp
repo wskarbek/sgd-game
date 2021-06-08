@@ -43,6 +43,8 @@ class World {
         SDL_Rect player_get_position();
         void player_render(int x, int y);
         bool player_check_next_block(int x, int y, Direction direction);
+        bool check_block(int x, int y);
         void move_camera_to_player();
-        bool check_environment_hitbox();
+        void objects_collect(); //Optimization?
+        void objects_move(); //MVP
 };

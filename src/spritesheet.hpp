@@ -15,4 +15,5 @@ class Spritesheet {
 
         void select_sprite(int x, int y);
         void draw_selected_sprite(SDL_Rect* position);
+        void recolor();
 };

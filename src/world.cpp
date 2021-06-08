@@ -102,6 +102,7 @@ SDL_Rect World::player_get_position() {
         for(int mapX = 0; mapX < sizeX; mapX++) {
             if(map.at(mapY).at(mapX) == START) {
                 std::cout << mapX << " " << mapY << std::endl;
+                //map.at(mapY).at(mapX) = AIR;
                 return { mapX, mapY, 0, 0 };
             }
         }
@@ -113,27 +114,59 @@ void World::player_render(int x, int y) {
     spritesheet.select_sprite(0, 0);
     spritesheet.draw_selected_sprite(&blockRect);
 }
-
+//TODO: Return player status, like death, score etc
 bool World::player_check_next_block(int x, int y, Direction direction) {
-    if(direction == UP) {
-        if(map.at(y-1).at(x) != 0) return true; 
-    }
-    if(direction == LEFT) {
-        if(map.at(y).at(x-1) != 0) return true; 
-    }
-    if(direction == RIGHT) {
-        if(map.at(y).at(x+1) != 0) return true; 
-    }
-    if(direction == DOWN) {
-        if(map.at(y+1).at(x) != 0) return true; 
-    }
+    if(direction == UP) return check_block(x, y-1);
+    if(direction == LEFT) return check_block(x-1, y);
+    if(direction == RIGHT) return check_block(x+1, y);
+    if(direction == DOWN) return check_block(x, y+1);
     return false;
 };
+
+bool World::check_block(int x, int y) {
+    if(map.at(y).at(x) == AIR) return false; //Can move
+    if(map.at(y).at(x) == WALL) return true; //Can't move through wall
+    if(map.at(y).at(x) == DIRT) { //Can move, digs dirt
+        map.at(y).at(x) = AIR;
+        return true;
+    }
+    if(map.at(y).at(x) == ROCK) return true;
+    if(map.at(y).at(x) == LAVA) return false; //Can move into lava, but dies (TODO)
+    if(map.at(y).at(x) == START) return false; //Start is same as air
+    if(map.at(y).at(x) == FINISH) return false; //Same as start, also wins the level
+    if(map.at(y).at(x) == DIAMOND) { //Can move, picks the diamond (TODO: GETS POINTS)
+        map.at(y).at(x) = AIR;
+        return true;
+    }
+}
 
 void World::move_camera_to_player() {
 
 }
 
-bool World::check_environment_hitbox() {
+void World::objects_collect() {
 
+}
+
+void World::objects_move() {
+    int sizeY = map.size();
+    int sizeX = map.at(0).size();
+    for(int mapY = 0; mapY < sizeY; mapY++) {
+        for(int mapX = 0; mapX < sizeX; mapX++) {
+            if(map.at(mapY).at(mapX) == ROCK) {
+                if(map.at(mapY+1).at(mapX) == AIR) {
+                    map.at(mapY).at(mapX) = AIR; 
+                    map.at(mapY+1).at(mapX) = ROCK;
+                } else
+                if(map.at(mapY).at(mapX-1) == AIR && map.at(mapY+1).at(mapX) == ROCK) {
+                    map.at(mapY).at(mapX) = AIR; 
+                    map.at(mapY).at(mapX-1) = ROCK;
+                } else
+                if(map.at(mapY).at(mapX+1) == AIR && map.at(mapY+1).at(mapX) == ROCK) {
+                    map.at(mapY).at(mapX) = AIR; 
+                    map.at(mapY).at(mapX+1) = ROCK;
+                }
+            }
+        }
+    }
 }

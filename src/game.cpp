@@ -15,21 +15,38 @@ void Game::init() {
     SDL_Rect pos = world.player_get_position();
     player.x = pos.x;
     player.y = pos.y;
+    player.moveFreeze = MOVE_FREEZE;
 }
 
 void Game::update() {
-    if (state[SDL_SCANCODE_RIGHT]) {
-        if(!world.player_check_next_block(player.x, player.y, RIGHT)) player.x++;
+    if(player.moveFreeze <= 0) {
+        if (state[SDL_SCANCODE_RIGHT]) {
+            if(!world.player_check_next_block(player.x, player.y, RIGHT)) {
+                player.x++;
+                player.moveFreeze = MOVE_FREEZE;
+            }
+        } else
+        if (state[SDL_SCANCODE_LEFT]) {
+            if(!world.player_check_next_block(player.x, player.y, LEFT)) {
+                player.x--;
+                player.moveFreeze = MOVE_FREEZE;
+            }
+        } else
+        if (state[SDL_SCANCODE_UP]) {
+            if(!world.player_check_next_block(player.x, player.y, UP)) {
+                player.y--;
+                player.moveFreeze = MOVE_FREEZE;
+            }
+        } else
+        if (state[SDL_SCANCODE_DOWN]) {
+            if(!world.player_check_next_block(player.x, player.y, DOWN)) {
+                player.y++;
+                player.moveFreeze = MOVE_FREEZE;
+            }
+        }
     }
-    if (state[SDL_SCANCODE_LEFT]) {
-        if(!world.player_check_next_block(player.x, player.y, LEFT)) player.x--;
-    }
-    if (state[SDL_SCANCODE_UP]) {
-        if(!world.player_check_next_block(player.x, player.y, UP)) player.y--;
-    }
-    if (state[SDL_SCANCODE_DOWN]) {
-        if(!world.player_check_next_block(player.x, player.y, DOWN)) player.y++;
-    }
+    player.moveFreeze--;
+    world.objects_move();
 }
 
 void Game::render() {

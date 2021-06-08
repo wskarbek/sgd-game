@@ -11,7 +11,7 @@ const int SCREEN_HEIGHT = 720;
 
 int main( int argc, char* args[] ) {
 
-    const SDL_Rect debugRect = {0, SCREEN_HEIGHT-15, 150, 12};
+    const SDL_Rect debugRect = {0, SCREEN_HEIGHT-30, 350, 30};
 
     bool quit = false;
     int mouseX, mouseY;
@@ -52,8 +52,8 @@ int main( int argc, char* args[] ) {
         //https://thenumbat.github.io/cpp-course/sdl2/08/08.html
         Uint64 end = SDL_GetPerformanceCounter();
         float elapsedMS = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
-        std::string dev = "Current FPS: " + std::to_string(1000.0f / (16.666f - elapsedMS));
-        SDL_Surface* textSurface = TTF_RenderText_Solid(font, dev.c_str(), {255, 0, 0, 0});
+        std::string dev = "Yet Another Boulder Dash Clone INDEV\nCurrent FPS: " + std::to_string(1000.0f / (16.666f - elapsedMS));
+        SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(font, dev.c_str(), {255, 0, 0, 0}, 350);
         SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
         SDL_RenderCopy(renderer, textTexture, NULL, &debugRect);
         SDL_FreeSurface(textSurface);
