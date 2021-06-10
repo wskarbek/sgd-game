@@ -4,6 +4,8 @@
 
 const int BLOCKSIZE = 48;
 
+int anim = 0;
+
 World::World() {
     
 }
@@ -51,12 +53,21 @@ void World::render_world() {
                     spritesheet.draw_selected_sprite(&blockRect);
                     break;
                 case DIAMOND:
-                    spritesheet.select_sprite(0, 4);
+                    if(anim >=0) spritesheet.select_sprite(0, 4);
+                    if(anim >=2*5) spritesheet.select_sprite(0, 5);
+                    if(anim >=3*5) spritesheet.select_sprite(0, 6);
+                    if(anim >=4*5) spritesheet.select_sprite(0, 7);
+                    if(anim >=5*5) spritesheet.select_sprite(1, 4);
+                    if(anim >=6*5) spritesheet.select_sprite(1, 5);
+                    if(anim >=7*5) spritesheet.select_sprite(1, 6);
+                    if(anim >=8*5) spritesheet.select_sprite(1, 7);
                     spritesheet.draw_selected_sprite(&blockRect);
                     break;
             }
         }
     }
+    if(anim >= 7*5) anim = 0;
+    anim++;
 }
 
 void World::level_load(const char *path) {
@@ -157,14 +168,17 @@ void World::objects_move() {
                 if(map.at(mapY+1).at(mapX) == AIR) { 
                     map.at(mapY+1).at(mapX) = map.at(mapY).at(mapX);
                     map.at(mapY).at(mapX) = AIR;
+                    break;
                 } else
-                if(map.at(mapY).at(mapX-1) == AIR && (map.at(mapY+1).at(mapX) == ROCK || map.at(mapY).at(mapX) == DIAMOND)) {
+                if(map.at(mapY).at(mapX-1) == AIR && map.at(mapY+1).at(mapX-1) == AIR && (map.at(mapY+1).at(mapX) == ROCK || map.at(mapY).at(mapX) == DIAMOND)) {
                     map.at(mapY).at(mapX-1) = map.at(mapY).at(mapX);
                     map.at(mapY).at(mapX) = AIR;
+                    break;
                 } else
-                if(map.at(mapY).at(mapX+1) == AIR && (map.at(mapY+1).at(mapX) == ROCK || map.at(mapY).at(mapX) == DIAMOND)) {
+                if(map.at(mapY).at(mapX+1) == AIR && map.at(mapY+1).at(mapX+1) == AIR &&(map.at(mapY+1).at(mapX) == ROCK || map.at(mapY).at(mapX) == DIAMOND)) {
                     map.at(mapY).at(mapX+1) = map.at(mapY).at(mapX);
                     map.at(mapY).at(mapX) = AIR;
+                    break;
                 }
             }
         }

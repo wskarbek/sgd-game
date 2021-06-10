@@ -12,8 +12,8 @@ struct Player {
 class Game{
     private:
         const Uint8 *state = SDL_GetKeyboardState(NULL);
-        const short MOVE_FREEZE = 10;
-        const short PHYSICS_FREEZE = 15;
+        const short MOVE_FREEZE = 8;
+        const short PHYSICS_FREEZE = 10;
         short physicsFreeze = 0;
         SDL_Renderer * renderer;
         Player player;
