@@ -27,6 +27,10 @@ int main( int argc, char* args[] ) {
     Game game(renderer);
 
     game.init();
+    TTF_Init();
+
+    SDL_Surface* textSurface;
+    SDL_Texture* textTexture;
 
     while(!quit) {
         Uint64 start = SDL_GetPerformanceCounter();
@@ -47,22 +51,23 @@ int main( int argc, char* args[] ) {
 
         //Debug
         //TODO: Move to another class
-        TTF_Init();
+        
         TTF_Font* font = TTF_OpenFont("../resources/fonts/Consolas.ttf", 12);
         //https://thenumbat.github.io/cpp-course/sdl2/08/08.html
         Uint64 end = SDL_GetPerformanceCounter();
         float elapsedMS = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
         std::string dev = "Yet Another Boulder Dash Clone INDEV\nCurrent FPS: " + std::to_string(1000.0f / (16.666f - elapsedMS));
-        SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(font, dev.c_str(), {255, 0, 0, 0}, 350);
-        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+        textSurface = TTF_RenderText_Blended_Wrapped(font, dev.c_str(), {255, 0, 0, 0}, 350);
+        textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
         SDL_RenderCopy(renderer, textTexture, NULL, &debugRect);
-        SDL_FreeSurface(textSurface);
-        SDL_DestroyTexture(textTexture);
-        TTF_Quit();
 	    //std::cout << "Current FPS: " << std::to_string(1000.0f / (16.666f - elapsedMS)) << std::endl;
         SDL_RenderPresent(renderer);
-        SDL_Delay(floor(16.666f - elapsedMS));
+        float delay = floor(16.666f - elapsedMS);
+        if(delay > 0.0f) SDL_Delay(delay);
     }
+    TTF_Quit();
+    SDL_DestroyTexture(textTexture);
+    SDL_FreeSurface(textSurface);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(gWindow);
 

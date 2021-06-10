@@ -15,7 +15,6 @@ void Game::init() {
     SDL_Rect pos = world.player_get_position();
     player.x = pos.x;
     player.y = pos.y;
-    player.moveFreeze = MOVE_FREEZE;
 }
 
 void Game::update() {
@@ -46,7 +45,11 @@ void Game::update() {
         }
     }
     player.moveFreeze--;
-    world.objects_move();
+    if(physicsFreeze <= 0) {
+        world.objects_move();
+        physicsFreeze = PHYSICS_FREEZE;
+    }
+    physicsFreeze--;
 }
 
 void Game::render() {

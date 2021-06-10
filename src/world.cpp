@@ -153,18 +153,18 @@ void World::objects_move() {
     int sizeX = map.at(0).size();
     for(int mapY = 0; mapY < sizeY; mapY++) {
         for(int mapX = 0; mapX < sizeX; mapX++) {
-            if(map.at(mapY).at(mapX) == ROCK) {
-                if(map.at(mapY+1).at(mapX) == AIR) {
-                    map.at(mapY).at(mapX) = AIR; 
-                    map.at(mapY+1).at(mapX) = ROCK;
+            if(map.at(mapY).at(mapX) == ROCK || map.at(mapY).at(mapX) == DIAMOND) {
+                if(map.at(mapY+1).at(mapX) == AIR) { 
+                    map.at(mapY+1).at(mapX) = map.at(mapY).at(mapX);
+                    map.at(mapY).at(mapX) = AIR;
                 } else
-                if(map.at(mapY).at(mapX-1) == AIR && map.at(mapY+1).at(mapX) == ROCK) {
-                    map.at(mapY).at(mapX) = AIR; 
-                    map.at(mapY).at(mapX-1) = ROCK;
+                if(map.at(mapY).at(mapX-1) == AIR && (map.at(mapY+1).at(mapX) == ROCK || map.at(mapY).at(mapX) == DIAMOND)) {
+                    map.at(mapY).at(mapX-1) = map.at(mapY).at(mapX);
+                    map.at(mapY).at(mapX) = AIR;
                 } else
-                if(map.at(mapY).at(mapX+1) == AIR && map.at(mapY+1).at(mapX) == ROCK) {
-                    map.at(mapY).at(mapX) = AIR; 
-                    map.at(mapY).at(mapX+1) = ROCK;
+                if(map.at(mapY).at(mapX+1) == AIR && (map.at(mapY+1).at(mapX) == ROCK || map.at(mapY).at(mapX) == DIAMOND)) {
+                    map.at(mapY).at(mapX+1) = map.at(mapY).at(mapX);
+                    map.at(mapY).at(mapX) = AIR;
                 }
             }
         }
