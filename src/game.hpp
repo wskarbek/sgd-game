@@ -22,6 +22,7 @@ class Game{
         Game(SDL_Renderer * r);
         ~Game();
         void init();
+        void nextLevel(int level);
         void update();
         void render();
 };

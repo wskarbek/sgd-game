@@ -12,6 +12,10 @@ enum Direction {
     UP, LEFT, RIGHT, DOWN
 };
 
+enum BlockStatus {
+    NONE, BLOCK, SCORE, WIN, DEATH
+};
+
 enum Block {
     AIR = 0,
     WALL = 1,
@@ -23,6 +27,12 @@ enum Block {
     DIAMOND = 7
 };
 
+struct MovableBlock {
+    Block block;
+    int x;
+    int y;
+};
+
 class World {
     private:
         int sizeX, sizeY; // Size of world
@@ -31,7 +41,8 @@ class World {
         SDL_Surface * blockSurfaceStone;
         SDL_Texture * blockTextureStone;
         Spritesheet spritesheet;
-        std::vector<std::vector<Block>> map;
+        std::vector<std::vector<Block>> map; 
+        //std::vector<MovableBlock> movableBlocks;
         std::ifstream inFile;
     public:
         World();
@@ -43,8 +54,7 @@ class World {
         SDL_Rect player_get_position();
         void player_render(int x, int y);
         bool player_check_next_block(int x, int y, Direction direction);
-        bool check_block(int x, int y);
-        void move_camera_to_player();
-        void objects_collect(); //Optimization?
-        void objects_move(); //MVP
+        BlockStatus check_block(int x, int y);
+        void move_camera_to_player(int playerX, int playerY);
+        void objects_move(int playerX, int playerY); //MVP
 };

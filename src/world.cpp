@@ -121,7 +121,7 @@ SDL_Rect World::player_get_position() {
 }
 
 void World::player_render(int x, int y) {
-    SDL_Rect blockRect = { x*BLOCKSIZE, y*BLOCKSIZE, BLOCKSIZE, BLOCKSIZE };
+    SDL_Rect blockRect = { x*BLOCKSIZE + renderX, y*BLOCKSIZE + renderY, BLOCKSIZE, BLOCKSIZE };
     spritesheet.select_sprite(0, 0);
     spritesheet.draw_selected_sprite(&blockRect);
 }
@@ -134,48 +134,69 @@ bool World::player_check_next_block(int x, int y, Direction direction) {
     return false;
 };
 
-bool World::check_block(int x, int y) {
-    if(map.at(y).at(x) == AIR) return false; //Can move
-    if(map.at(y).at(x) == WALL) return true; //Can't move through wall
+BlockStatus World::check_block(int x, int y) {
+    if(map.at(y).at(x) == AIR) return NONE; //Can move
+    if(map.at(y).at(x) == WALL) return BLOCK; //Can't move through wall
     if(map.at(y).at(x) == DIRT) { //Can move, digs dirt
         map.at(y).at(x) = AIR;
-        return true;
+        return NONE;
     }
-    if(map.at(y).at(x) == ROCK) return true;
-    if(map.at(y).at(x) == LAVA) return false; //Can move into lava, but dies (TODO)
-    if(map.at(y).at(x) == START) return false; //Start is same as air
-    if(map.at(y).at(x) == FINISH) return false; //Same as start, also wins the level
+    if(map.at(y).at(x) == ROCK) return BLOCK;
+    if(map.at(y).at(x) == LAVA) return DEATH; //Can move into lava, but dies (TODO)
+    if(map.at(y).at(x) == START) return NONE; //Start is same as air
+    if(map.at(y).at(x) == FINISH) return WIN; //Same as start, also wins the level
     if(map.at(y).at(x) == DIAMOND) { //Can move, picks the diamond (TODO: GETS POINTS)
         map.at(y).at(x) = AIR;
-        return true;
+        return SCORE;
     }
 }
 
-void World::move_camera_to_player() {
-
+void World::move_camera_to_player(int playerX, int playerY) {
+    if(0 - playerY * BLOCKSIZE + 720/2 > 0) {
+        renderY = 0;
+    } else 
+    if(0 - playerY * BLOCKSIZE + 720/2 < 0 - map.size() * BLOCKSIZE + 720) {
+       renderY = 0 - map.size() * BLOCKSIZE + 720; 
+    } else {
+        renderY = 0 - playerY * BLOCKSIZE + 720/2;
+    }
+    if(0 - playerX * BLOCKSIZE + 1280/2 > 0) {
+        renderX = 0;
+    } else
+    if(0 - playerX * BLOCKSIZE + 1280/2 < 0 - map.at(0).size() * BLOCKSIZE + 1280) {
+        renderX = 0 - map.at(0).size() * BLOCKSIZE + 1280;
+    } else {
+        renderX = 0 - playerX * BLOCKSIZE + 1240/2;
+    }
 }
 
-void World::objects_collect() {
-
-}
-
-void World::objects_move() {
+void World::objects_move(int playerX, int playerY) {
     int sizeY = map.size();
     int sizeX = map.at(0).size();
     for(int mapY = 0; mapY < sizeY; mapY++) {
         for(int mapX = 0; mapX < sizeX; mapX++) {
             if(map.at(mapY).at(mapX) == ROCK || map.at(mapY).at(mapX) == DIAMOND) {
-                if(map.at(mapY+1).at(mapX) == AIR) { 
+                if(map.at(mapY+1).at(mapX) == AIR && !(mapX == playerX && mapY+1 == playerY)) { 
                     map.at(mapY+1).at(mapX) = map.at(mapY).at(mapX);
                     map.at(mapY).at(mapX) = AIR;
                     break;
                 } else
-                if(map.at(mapY).at(mapX-1) == AIR && map.at(mapY+1).at(mapX-1) == AIR && (map.at(mapY+1).at(mapX) == ROCK || map.at(mapY).at(mapX) == DIAMOND)) {
+                if(
+                    map.at(mapY).at(mapX-1) == AIR && 
+                    map.at(mapY+1).at(mapX-1) == AIR &&
+                    (map.at(mapY+1).at(mapX) == ROCK || map.at(mapY).at(mapX) == DIAMOND) &&
+                    (!(mapX-1 == playerX && mapY == playerY) && !(mapX-1 == playerX && mapY+1 == playerY))
+                ) {
                     map.at(mapY).at(mapX-1) = map.at(mapY).at(mapX);
                     map.at(mapY).at(mapX) = AIR;
                     break;
                 } else
-                if(map.at(mapY).at(mapX+1) == AIR && map.at(mapY+1).at(mapX+1) == AIR &&(map.at(mapY+1).at(mapX) == ROCK || map.at(mapY).at(mapX) == DIAMOND)) {
+                if(
+                    map.at(mapY).at(mapX+1) == AIR &&
+                    map.at(mapY+1).at(mapX+1) == AIR &&
+                    (map.at(mapY+1).at(mapX) == ROCK || map.at(mapY).at(mapX) == DIAMOND) &&
+                    (!(mapX+1 == playerX && mapY == playerY) && !(mapX+1 == playerX && mapY+1 == playerY))
+                ) {
                     map.at(mapY).at(mapX+1) = map.at(mapY).at(mapX);
                     map.at(mapY).at(mapX) = AIR;
                     break;
