@@ -38,8 +38,6 @@ class World {
         int sizeX, sizeY; // Size of world
         int renderX, renderY; // World render offset
         SDL_Renderer * renderer;
-        SDL_Surface * blockSurfaceStone;
-        SDL_Texture * blockTextureStone;
         Spritesheet spritesheet;
         std::vector<std::vector<Block>> map; 
         //std::vector<MovableBlock> movableBlocks;
@@ -53,7 +51,7 @@ class World {
         void load_block_textures();
         SDL_Rect player_get_position();
         void player_render(int x, int y);
-        bool player_check_next_block(int x, int y, Direction direction);
+        BlockStatus player_check_next_block(int x, int y, Direction direction);
         BlockStatus check_block(int x, int y);
         void move_camera_to_player(int playerX, int playerY);
         void objects_move(int playerX, int playerY); //MVP

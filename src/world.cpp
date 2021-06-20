@@ -71,6 +71,7 @@ void World::render_world() {
 }
 
 void World::level_load(const char *path) {
+    std::cout << path << std::endl;
     inFile.open(path);
     if(!inFile) {
         std::cout << "Unable to load level";
@@ -126,12 +127,11 @@ void World::player_render(int x, int y) {
     spritesheet.draw_selected_sprite(&blockRect);
 }
 //TODO: Return player status, like death, score etc
-bool World::player_check_next_block(int x, int y, Direction direction) {
+BlockStatus World::player_check_next_block(int x, int y, Direction direction) {
     if(direction == UP) return check_block(x, y-1);
     if(direction == LEFT) return check_block(x-1, y);
     if(direction == RIGHT) return check_block(x+1, y);
     if(direction == DOWN) return check_block(x, y+1);
-    return false;
 };
 
 BlockStatus World::check_block(int x, int y) {

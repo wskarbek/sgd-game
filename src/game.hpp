@@ -1,4 +1,7 @@
 #include <SDL2/SDL.h>
+#include <string>
+#include <cstring>
+#include <iostream>
 
 #include <world.hpp>
 
@@ -14,6 +17,8 @@ class Game{
         const Uint8 *state = SDL_GetKeyboardState(NULL);
         const short MOVE_FREEZE = 8;
         const short PHYSICS_FREEZE = 10;
+        const int MAX_LEVEL = 2;
+        int level = 1;
         short physicsFreeze = 0;
         SDL_Renderer * renderer;
         Player player;

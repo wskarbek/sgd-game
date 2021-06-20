@@ -18,8 +18,12 @@ void Game::init() {
 }
 
 void Game::nextLevel(int level) {
-    world.load_block_textures();
-    world.level_load("../resources/levels/2.lvl");
+    std::string levelName = "../resources/levels/" + std::to_string(level) + ".lvl";
+    std::cout << "Unloading level" << std::endl;
+    world.level_unload();
+    std::cout << "Loading level" << std::endl;
+    world.level_load(levelName.c_str());
+    std::cout << "Level loaded" << std::endl;
     SDL_Rect pos = world.player_get_position();
     player.x = pos.x;
     player.y = pos.y;
@@ -27,33 +31,38 @@ void Game::nextLevel(int level) {
 
 void Game::update() {
     if(player.moveFreeze <= 0) {
-        if (state[SDL_SCANCODE_RIGHT]) {
-            auto nextBlock = world.player_check_next_block(player.x, player.y, RIGHT);
-            if(nextBlock != BLOCK) {
-                player.x++;
-                player.moveFreeze = MOVE_FREEZE;
+        if (
+            state[SDL_SCANCODE_RIGHT] ||
+            state[SDL_SCANCODE_LEFT] || 
+            state[SDL_SCANCODE_UP] ||
+            state[SDL_SCANCODE_DOWN]
+            ) {
+            BlockStatus nextBlock;
+            if (state[SDL_SCANCODE_RIGHT]) {
+                nextBlock = world.player_check_next_block(player.x, player.y, RIGHT);
+                if(nextBlock != BLOCK) player.x++;
+            } else
+            if (state[SDL_SCANCODE_LEFT]) {
+                nextBlock = world.player_check_next_block(player.x, player.y, LEFT);
+                if(nextBlock != BLOCK) player.x--;
+            } else
+            if (state[SDL_SCANCODE_UP]) {
+                nextBlock = world.player_check_next_block(player.x, player.y, UP);
+                if(nextBlock != BLOCK) player.y--;
+            } else
+            if (state[SDL_SCANCODE_DOWN]) {
+                nextBlock = world.player_check_next_block(player.x, player.y, DOWN);
+                if(nextBlock != BLOCK) player.y++;
             }
-        } else
-        if (state[SDL_SCANCODE_LEFT]) {
-            auto nextBlock = world.player_check_next_block(player.x, player.y, LEFT);
-            if(nextBlock != BLOCK) {
-                player.x--;
-                player.moveFreeze = MOVE_FREEZE;
+            if(nextBlock == WIN)  {
+                if(level != MAX_LEVEL) {
+                    level++;
+                    nextLevel(level);
+                } else {
+                    //no elo wygrałeś
+                }
             }
-        } else
-        if (state[SDL_SCANCODE_UP]) {
-            auto nextBlock = world.player_check_next_block(player.x, player.y, UP);
-            if(nextBlock != BLOCK) {
-                player.y--;
-                player.moveFreeze = MOVE_FREEZE;
-            }
-        } else
-        if (state[SDL_SCANCODE_DOWN]) {
-            auto nextBlock = world.player_check_next_block(player.x, player.y, DOWN);
-            if(nextBlock != BLOCK) {
-                player.y++;
-                player.moveFreeze = MOVE_FREEZE;
-            }
+            player.moveFreeze = MOVE_FREEZE;
         }
     }
     player.moveFreeze--;
