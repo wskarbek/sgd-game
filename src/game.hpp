@@ -20,6 +20,7 @@ class Game{
         const int MAX_LEVEL = 2;
         int level = 1;
         short physicsFreeze = 0;
+        Direction lastMove = NO;
         SDL_Renderer * renderer;
         Player player;
         World world;

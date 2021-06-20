@@ -40,19 +40,31 @@ void Game::update() {
             BlockStatus nextBlock;
             if (state[SDL_SCANCODE_RIGHT]) {
                 nextBlock = world.player_check_next_block(player.x, player.y, RIGHT);
-                if(nextBlock != BLOCK) player.x++;
+                if(nextBlock != BLOCK) {
+                    player.x++;
+                    lastMove = RIGHT;
+                }
             } else
             if (state[SDL_SCANCODE_LEFT]) {
                 nextBlock = world.player_check_next_block(player.x, player.y, LEFT);
-                if(nextBlock != BLOCK) player.x--;
+                if(nextBlock != BLOCK) {
+                    player.x--;\
+                    lastMove = LEFT;
+                }
             } else
             if (state[SDL_SCANCODE_UP]) {
                 nextBlock = world.player_check_next_block(player.x, player.y, UP);
-                if(nextBlock != BLOCK) player.y--;
+                if(nextBlock != BLOCK) {
+                    player.y--;
+                    lastMove = UP;
+                }
             } else
             if (state[SDL_SCANCODE_DOWN]) {
                 nextBlock = world.player_check_next_block(player.x, player.y, DOWN);
-                if(nextBlock != BLOCK) player.y++;
+                if(nextBlock != BLOCK) {
+                    player.y++;
+                    lastMove = DOWN;
+                }
             }
             if(nextBlock == WIN)  {
                 if(level != MAX_LEVEL) {
@@ -62,7 +74,9 @@ void Game::update() {
                     //no elo wygrałeś
                 }
             }
-            player.moveFreeze = MOVE_FREEZE;
+            if(nextBlock != BLOCK)  {
+                player.moveFreeze = MOVE_FREEZE;
+            }
         }
     }
     player.moveFreeze--;
@@ -76,5 +90,9 @@ void Game::update() {
 void Game::render() {
     world.move_camera_to_player(player.x, player.y);
     world.render_world();
-    world.player_render(player.x, player.y);
+    if(player.moveFreeze <= 0) {
+        world.player_render(player.x, player.y, NO);
+    } else {
+        world.player_render(player.x, player.y, lastMove);
+    }
 }

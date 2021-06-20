@@ -5,6 +5,7 @@
 const int BLOCKSIZE = 48;
 
 int anim = 0;
+int panim = 0;
 
 World::World() {
     
@@ -66,8 +67,8 @@ void World::render_world() {
             }
         }
     }
-    if(anim >= 7*5) anim = 0;
     anim++;
+    if(anim >= 7*5) anim = 0;
 }
 
 void World::level_load(const char *path) {
@@ -121,10 +122,36 @@ SDL_Rect World::player_get_position() {
     }
 }
 
-void World::player_render(int x, int y) {
+void World::player_render(int x, int y, Direction direction) {
     SDL_Rect blockRect = { x*BLOCKSIZE + renderX, y*BLOCKSIZE + renderY, BLOCKSIZE, BLOCKSIZE };
-    spritesheet.select_sprite(0, 0);
-    spritesheet.draw_selected_sprite(&blockRect);
+    if(direction != NO) panim++;
+    if(panim == 0) {
+        spritesheet.select_sprite(0, 0);
+        spritesheet.draw_selected_sprite(&blockRect);
+    } else {
+        if(direction == RIGHT) {
+            spritesheet.select_sprite(0, 2);
+            blockRect.x = blockRect.x + panim;
+            spritesheet.draw_selected_sprite(&blockRect);
+        } 
+        if(direction == LEFT) {
+            spritesheet.select_sprite(0, 1);
+            blockRect.x = blockRect.x - panim;
+            spritesheet.draw_selected_sprite(&blockRect);
+        }
+        if(direction == UP) {
+            spritesheet.select_sprite(2, 0);
+            blockRect.y = blockRect.y - panim;
+            spritesheet.draw_selected_sprite(&blockRect);
+        } 
+        if(direction == DOWN) {
+            spritesheet.select_sprite(3, 0);
+            blockRect.y = blockRect.y + panim;
+            spritesheet.draw_selected_sprite(&blockRect);
+        }
+        panim++;
+        if(panim >= 7) panim = 0;
+    }
 }
 //TODO: Return player status, like death, score etc
 BlockStatus World::player_check_next_block(int x, int y, Direction direction) {

@@ -9,7 +9,7 @@
 #include "spritesheet.hpp"
 
 enum Direction {
-    UP, LEFT, RIGHT, DOWN
+    UP, LEFT, RIGHT, DOWN, NO
 };
 
 enum BlockStatus {
@@ -50,7 +50,7 @@ class World {
         void level_unload();
         void load_block_textures();
         SDL_Rect player_get_position();
-        void player_render(int x, int y);
+        void player_render(int x, int y, Direction direction);
         BlockStatus player_check_next_block(int x, int y, Direction direction);
         BlockStatus check_block(int x, int y);
         void move_camera_to_player(int playerX, int playerY);
